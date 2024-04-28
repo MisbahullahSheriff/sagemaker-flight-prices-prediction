@@ -21,6 +21,21 @@ def display_html(size=3, content="content"):
   display(HTML(f"<h{size}>{content}</h{size}>"))
 
 
+def rotate_xlabels(ax, angle=35):
+  ax.set_xticklabels(
+        ax.get_xticklabels(),
+        rotation=angle,
+        ha="right"
+    )
+  
+
+def rotate_ylabels(ax, angle=0):
+  ax.set_yticklabels(
+    ax.get_yticklabels(),
+    rotation=angle
+  )
+
+
 # pair plots
 def pair_plots(data,
                height=3,
@@ -66,11 +81,8 @@ def correlation_heatmap(data,
       mask=mask,
       ax=ax
   )
-  rotate_labels(ax)
-  ax.set_yticklabels(
-    ax.get_yticklabels(),
-    rotation=0
-  )
+  rotate_xlabels(ax)
+  rotate_ylabels(ax)
   ax.set(title=f"{method.title()} Correlation Matrix Heatmap")
 
 
@@ -370,11 +382,8 @@ def cramersV_heatmap(data, figsize=(12, 6), cmap="Blues"):
       ax=ax
   )
   ax.set(title="Cramer's V Correlation Matrix Heatmap")
-  rotate_labels(ax)
-  ax.set_yticklabels(
-    ax.get_yticklabels(),
-    rotation=0
-  )
+  rotate_xlabels(ax)
+  rotate_ylabels(ax)
 
 
 # bivariate plots between 2 numeric variables
@@ -644,6 +653,7 @@ def cat_univar_plots(data,
         data
         .loc[:, var]
         .dropna()
+        .str.replace(" ", "_")
         .to_list()
     )
 
@@ -666,15 +676,7 @@ def cat_univar_plots(data,
   plt.show()
 
 
-# bivariate plots between numeric and categorical variable
-def rotate_labels(ax, angle=35):
-  ax.set_xticklabels(
-        ax.get_xticklabels(),
-        rotation=angle,
-        ha="right"
-    )
-  
-
+# bivariate plots between numeric and categorical variable 
 def num_cat_bivar_plots(data,
                         num_var,
                         cat_var,
@@ -743,7 +745,7 @@ def num_cat_bivar_plots(data,
         xlabel=cat_var,
         ylabel=num_var
     )
-    rotate_labels(axes[0])
+    rotate_xlabels(axes[0])
 
     # box plot
     sns.boxplot(
@@ -759,7 +761,7 @@ def num_cat_bivar_plots(data,
         xlabel=cat_var,
         ylabel=""
     )
-    rotate_labels(axes[1])
+    rotate_xlabels(axes[1])
 
     # violin plot
     sns.violinplot(
@@ -776,7 +778,7 @@ def num_cat_bivar_plots(data,
         xlabel=cat_var,
         ylabel=""
     )
-    rotate_labels(axes[2])
+    rotate_xlabels(axes[2])
   else:
     fig, axes = plt.subplots(3, 1, figsize=figsize)
 
@@ -904,11 +906,8 @@ def cat_bivar_plots(data,
       cbar_kws=dict(location="top", label="Counts"),
       ax=axes[0]
   )
-  axes[0].set_yticklabels(
-      axes[0].get_yticklabels(),
-      rotation=0
-  )
-  rotate_labels(axes[0])
+  rotate_ylabels(axes[0])
+  rotate_xlabels(axes[0])
 
   # normalized cross-tab heatmap
   norm_ct = (
@@ -934,11 +933,8 @@ def cat_bivar_plots(data,
       ax=axes[1]
   )
   axes[1].set(ylabel="")
-  axes[1].set_yticklabels(
-      axes[1].get_yticklabels(),
-      rotation=0
-  )
-  rotate_labels(axes[1])
+  rotate_ylabels(axes[1])
+  rotate_xlabels(axes[1])
 
   # bar plot
   (
@@ -950,7 +946,7 @@ def cat_bivar_plots(data,
           legend=False
       )
   )
-  rotate_labels(axes[2])
+  rotate_xlabels(axes[2])
 
   # stacked bar plot
   (
@@ -962,7 +958,7 @@ def cat_bivar_plots(data,
           stacked=True
       )
   )
-  rotate_labels(axes[3])
+  rotate_xlabels(axes[3])
   axes[3].legend(
       loc="upper left",
       bbox_to_anchor=(1, 1),
@@ -1037,7 +1033,7 @@ def plot_missing_info(data, bar_label_params=dict(), figsize=(10, 4)):
       ylabel="Count",
       title="Missing Data Counts per Variable"
   )
-  rotate_labels(ax)
+  rotate_xlabels(ax)
   plt.tight_layout()
   plt.show()
 
@@ -1089,7 +1085,7 @@ def dt_univar_plots(data, var, target=None, bins="auto"):
     ax=ax1
   )
   ax1.set(title="Histogram")
-  rotate_labels(ax1)
+  rotate_xlabels(ax1)
 
   # line-plot
   sns.lineplot(
@@ -1099,5 +1095,5 @@ def dt_univar_plots(data, var, target=None, bins="auto"):
     color="#d92b2b",
     ax=ax2
   )
-  rotate_labels(ax2)
+  rotate_xlabels(ax2)
   ax2.set(title="Line Plot")
